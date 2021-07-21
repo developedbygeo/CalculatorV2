@@ -40,11 +40,18 @@
   <body>
     <main>
       <section class="calculator">
-        <div class="display"></div>
+        <div class="display">
+          <div class="input-display">
+            <input type="number" name="input-value" id="input-value" placeholder="0">
+          </div>
+          <div class="output-display">
+            <span class="output-value"></span>
+          </div>
+        </div>
         <div class="buttons">
           <div class="key key-percentage">
             <button class="percentage-button operator">
-              <i class="fas fa-percentage"></i>
+              <span class="span-o1">o</span>/<span class="span-o2">o</span>
             </button>
           </div>
           <div class="key key-ce">
@@ -59,7 +66,7 @@
             </button>
           </div>
           <div class="key key-divide-by-x">
-            <button class="divide-by-x-button operator">1/X</button>
+            <button class="divide-by-x-button operator"><span class="span-1">1</span>/<span class="span-x">x</span></button>
           </div>
           <div class="key key-square">
             <button class="sqr-button operator">
@@ -68,17 +75,17 @@
           </div>
           <div class="key key-square-root">
             <button class="sqr-root-button operator">
-              <i class="fas fa-square-root-alt"></i>
+              &Sqrt;<span class="x">x</span>
             </button>
           </div>
           <div class="key key-division">
             <button class="division-button operator">
-              <i class="fas fa-divide"></i>
+              &div;
             </button>
           </div>
           <div class="key key-multiplication">
             <button class="multiplication-button operator">
-              <i class="fas fa-times"></i>
+              &times;
             </button>
           </div>
           <div class="key key-subtraction">
@@ -118,7 +125,7 @@
             <button class="operand button3">3</button>
           </div>
           <div class="operand-key keyplusminus">
-            <button class="operand buttonplusminus">+/-</button>
+            <button class="operand buttonplusminus"><span class="plus">+</span>/<span class="minus">-</span></button>
           </div>
           <div class="operand-key key0">
             <button class="operand button0">0</button>
@@ -130,5 +137,6 @@
     </div>
       </section>
     </main>
+    <script src="./app.js"></script>
   </body>
 </html>
