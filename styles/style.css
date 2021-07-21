@@ -1,1 +1,124 @@
-/* No CSS *//*# sourceMappingURL=style.css.map */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+h1 {
+  font-size: 2.8rem;
+}
+
+p,
+a,
+li {
+  font-size: 1.8rem;
+}
+
+i {
+  pointer-events: none;
+}
+
+main {
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.calculator {
+  width: 90vw;
+  height: 90vh;
+  background: lightpink;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr 1fr;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 0.1rem;
+}
+
+.buttons button {
+  width: 100%;
+  height: 100%;
+  color: #f8f9fa;
+  border: none;
+  outline: none;
+}
+
+.calculator {
+  background: #495057;
+}
+
+.operator {
+  background: #343a40;
+}
+
+.operand {
+  background: #212529;
+}
+
+.key-percentage {
+  grid-area: 1/1/1/2;
+}
+
+.key-ce {
+  grid-area: 1/2/1/3;
+}
+
+.key-c {
+  grid-area: 1/3/1/4;
+}
+
+.key-backspace {
+  grid-area: 1/4/1/5;
+}
+
+.key-divide-by-x {
+  grid-area: 2/1/2/2;
+}
+
+.key-square {
+  grid-area: 2/2/2/3;
+}
+
+.key-square-root {
+  grid-area: 2/3/2/4;
+}
+
+.key-division {
+  grid-area: 2/4/2/5;
+}
+
+.key-multiplication {
+  grid-area: 3/4/3/5;
+}
+
+.key-subtraction {
+  grid-area: 4/4/4/5;
+}
+
+.key-addition {
+  grid-area: 5/4/5/5;
+}
+
+.key-equal {
+  grid-area: 6/4/6/5;
+}
+
+.key7 {
+  grid-area: 3/1/3/2;
+}
+
+.equal-button {
+  background: #4361ee;
+}
+/*# sourceMappingURL=style.css.map */

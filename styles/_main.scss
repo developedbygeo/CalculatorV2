@@ -1,0 +1,72 @@
+main {
+  height: 100vh;
+  @include flex(center, center, column);
+}
+.calculator {
+  width: 90vw;
+  height: 90vh;
+  background: lightpink;
+  @include grid(1fr, 0.5fr 1fr);
+}
+.buttons {
+  @include grid(repeat(4, 1fr), repeat(6, 1fr));
+  gap: 0.1rem;
+  button {
+    width: 100%;
+    height: 100%;
+    color: $cultured;
+    border: none;
+    outline: none;
+  }
+}
+.calculator {
+  background: $davysgray;
+}
+.operator {
+  background: $gunmetal;
+}
+.operand {
+  background: $charleston;
+}
+.key-percentage {
+  grid-area: 1/1/1/2;
+}
+.key-ce {
+  grid-area: 1/2/1/3;
+}
+.key-c {
+  grid-area: 1/3/1/4;
+}
+.key-backspace {
+  grid-area: 1/4/1/5;
+}
+.key-divide-by-x {
+  grid-area: 2/1/2/2;
+}
+.key-square {
+  grid-area: 2/2/2/3;
+}
+.key-square-root {
+  grid-area: 2/3/2/4;
+}
+.key-division {
+  grid-area: 2/4/2/5;
+}
+.key-multiplication {
+  grid-area: 3/4/3/5;
+}
+.key-subtraction {
+  grid-area: 4/4/4/5;
+}
+.key-addition {
+  grid-area: 5/4/5/5;
+}
+.key-equal {
+  grid-area: 6/4/6/5;
+}
+.key7 {
+  grid-area: 3/1/3/2;
+}
+.equal-button {
+  background: $ultramarine;
+}
