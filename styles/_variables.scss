@@ -1,0 +1,17 @@
+$cultured: #f8f9fa;
+$ultramarine: #4361ee;
+$davysgray: #495057;
+$gunmetal: #343a40;
+$charleston: #212529;
+
+@mixin flex($justify, $align, $dir) {
+  display: grid;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $dir;
+}
+@mixin grid($cols, $rows) {
+  display: grid;
+  grid-template-columns: $cols;
+  grid-template-rows: $rows;
+}
