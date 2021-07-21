@@ -39,6 +39,12 @@ main {
   grid-template-rows: 0.5fr 1fr;
 }
 
+.display {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr 1fr;
+}
+
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -54,16 +60,63 @@ main {
   outline: none;
 }
 
+.input-display {
+  grid-area: 2/1/2/1;
+}
+
+.input-display,
+.output-display {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.3fr 1fr 0.3fr;
+  margin-right: 2rem;
+}
+
+#input-value {
+  grid-area: 2/1/2/1;
+  font-size: 3rem;
+  text-align: right;
+  margin-right: 2rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f8f9fa;
+  width: 100%;
+}
+
+#input-value::-webkit-outer-spin-button,
+#input-value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#input-value[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.output-value {
+  grid-area: 2/1/2/1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+  color: rgba(248, 249, 250, 0.65);
+  text-align: right;
+  margin-top: 2rem;
+}
+
 .calculator {
   background: #495057;
 }
 
 .operator {
   background: #343a40;
+  font-size: 1.6rem;
 }
 
 .operand {
   background: #212529;
+  font-size: 1.6rem;
 }
 
 .key-percentage {
@@ -120,5 +173,93 @@ main {
 
 .equal-button {
   background: #4361ee;
+}
+
+.ce-button,
+.c-button,
+.fa-backspace {
+  font-size: 1.3rem;
+}
+
+.plus,
+.minus,
+.x,
+.sqr,
+.span-1,
+.span-x,
+.span-o1,
+.span-o2 {
+  position: absolute;
+  pointer-events: none;
+}
+
+.sqr-button {
+  position: relative;
+}
+
+.sqr-button .sqr {
+  font-size: 1rem;
+  top: 30%;
+  left: 56%;
+}
+
+.x {
+  font-size: 1.2rem;
+}
+
+.key-divide-by-x {
+  position: relative;
+}
+
+.key-divide-by-x .span-1 {
+  font-size: 1.1rem;
+  top: 30%;
+  left: 40%;
+}
+
+.key-divide-by-x .span-x {
+  font-size: 1.1rem;
+  top: 43%;
+  left: 53%;
+}
+
+.buttonplusminus {
+  position: relative;
+}
+
+.plus {
+  top: 26%;
+  left: 35%;
+}
+
+.minus {
+  bottom: 26%;
+}
+
+.percentage-button {
+  position: relative;
+}
+
+.span-o1,
+.span-o2 {
+  font-size: 0.8rem;
+}
+
+.span-o1 {
+  top: 33%;
+  left: 42%;
+}
+
+.span-o2 {
+  top: 47%;
+  right: 42%;
+}
+
+.division-button,
+.multiplication-button,
+.subtraction-button,
+.addition-button,
+.equal-button {
+  font-size: 1.8rem;
 }
 /*# sourceMappingURL=style.css.map */

@@ -8,6 +8,9 @@ main {
   background: lightpink;
   @include grid(1fr, 0.5fr 1fr);
 }
+.display {
+  @include grid(1fr, 0.5fr 1fr);
+}
 .buttons {
   @include grid(repeat(4, 1fr), repeat(6, 1fr));
   gap: 0.1rem;
@@ -19,14 +22,53 @@ main {
     outline: none;
   }
 }
+.input-display {
+  grid-area: 2/1/2/1;
+}
+.input-display,
+.output-display {
+  @include grid(1fr, 0.3fr 1fr 0.3fr);
+  margin-right: 2rem;
+}
+#input-value {
+  grid-area: 2/1/2/1;
+  font-size: 3rem;
+  text-align: right;
+  margin-right: 2rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: $cultured;
+  width: 100%;
+}
+#input-value::-webkit-outer-spin-button,
+#input-value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#input-value[type="number"] {
+  -moz-appearance: textfield;
+}
+.output-value {
+  grid-area: 2/1/2/1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+  color: rgba($color: $cultured, $alpha: 0.65);
+  text-align: right;
+  margin-top: 2rem;
+}
 .calculator {
   background: $davysgray;
 }
 .operator {
   background: $gunmetal;
+  font-size: 1.6rem;
 }
 .operand {
   background: $charleston;
+  font-size: 1.6rem;
 }
 .key-percentage {
   grid-area: 1/1/1/2;
@@ -69,4 +111,77 @@ main {
 }
 .equal-button {
   background: $ultramarine;
+}
+.ce-button,
+.c-button,
+.fa-backspace {
+  font-size: 1.3rem;
+}
+.plus,
+.minus,
+.x,
+.sqr,
+.span-1,
+.span-x,
+.span-o1,
+.span-o2 {
+  position: absolute;
+  pointer-events: none;
+}
+.sqr-button {
+  position: relative;
+  .sqr {
+    font-size: 1rem;
+    top: 30%;
+    left: 56%;
+  }
+}
+.x {
+  font-size: 1.2rem;
+}
+.key-divide-by-x {
+  position: relative;
+  .span-1 {
+    font-size: 1.1rem;
+    top: 30%;
+    left: 40%;
+  }
+  .span-x {
+    font-size: 1.1rem;
+    top: 43%;
+    left: 53%;
+  }
+}
+.buttonplusminus {
+  position: relative;
+}
+.plus {
+  top: 26%;
+  left: 35%;
+}
+.minus {
+  bottom: 26%;
+}
+.percentage-button {
+  position: relative;
+}
+.span-o1,
+.span-o2 {
+  font-size: 0.8rem;
+}
+.span-o1 {
+  top: 33%;
+  left: 42%;
+}
+.span-o2 {
+  top: 47%;
+  right: 42%;
+}
+
+.division-button,
+.multiplication-button,
+.subtraction-button,
+.addition-button,
+.equal-button {
+  font-size: 1.8rem;
 }
