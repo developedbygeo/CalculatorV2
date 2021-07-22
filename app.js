@@ -43,12 +43,6 @@ allOperands.forEach((operand) =>
         console.log(calculator);
       })
     );
-    // console.log(buttonValue);
-    // console.log(e.target.value);
-    // getOperand(buttonValue);
-    // a += buttonValue;
-    // inputDisplay.value = parseFloat(a);
-    // console.log(a);
   })
 );
 
