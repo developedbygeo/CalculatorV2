@@ -114,7 +114,8 @@ main {
   font-size: 1.6rem;
 }
 
-.operand {
+.operand,
+.buttonplusminus {
   background: #212529;
   font-size: 1.6rem;
 }
