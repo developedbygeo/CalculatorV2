@@ -22,28 +22,36 @@ const calculator = {
   incomingSecondOperand: false,
   operator: null,
 };
-
-// window.addEventListener("load", refresh);
-// TODO need to specify one-operand calculations, like sqr root, sqr etc
+const pastCalculator = {
+  firstOperand: null,
+  operator: null,
+  secondOperand: null,
+};
 
 allOperands.forEach((operand) =>
   operand.addEventListener("click", (e) => {
-    let buttonValue = e.target.innerText;
-    numberInput(buttonValue);
-    update();
-
-    allOperators.forEach((operator) =>
-      operator.addEventListener("click", (e) => {
-        let operatorValue = e.target.innerText;
-        operatorInput(operatorValue);
-      })
-    );
+    operandValue = e.target.innerText;
+    inputValues(operandValue);
+    display();
+    if (operand.classList.contains("buttonpoint")) {
+      const decimal = e.target.innerText;
+      inputDecimal(decimal);
+    }
+  })
+);
+allOperators.forEach((operator) =>
+  operator.addEventListener("click", (e) => {
+    const operatorValue = e.target.innerText;
+    console.log(operatorValue);
+    inputOperator(operatorValue);
   })
 );
 
-// to get the input values
-function numberInput(num) {
-  const { value, incomingSecondOperand } = calculator;
+function display() {
+  inputDisplay.value = calculator.value;
+}
+function inputValues(num) {
+  const { incomingSecondOperand, value } = calculator;
   if (incomingSecondOperand === true) {
     calculator.value = num;
     calculator.incomingSecondOperand = false;
@@ -51,51 +59,83 @@ function numberInput(num) {
     calculator.value = value === "0" ? num : value + num;
   }
 }
-function update() {
-  inputDisplay.value = calculator.value;
-}
-function defaultDisplay() {
-  calculator.value = "";
-  update();
-}
-function output() {
-  if (calculator.value == null) {
-    outputDisplay.innerText = `${calculator.firstOperand} ${calculator.operator}`;
-  } else {
-    outputDisplay.innerText = `${calculator.firstOperand} ${calculator.operator} ${calculator.value} =`;
+function inputDecimal(dot) {
+  if (!calculator.value.includes(dot)) {
+    calculator.value += dot;
   }
 }
-function twoOperandCalculation(firstOperand, operator, secondOperand) {
-  const first = parseFloat(firstOperand);
-  const second = parseFloat(secondOperand);
-  switch (operator) {
-    case "+":
-      return first + second;
-    case "-":
-      return first - second;
-    case "*":
-      return first * second;
-    case "÷":
-      return first / second;
-  }
-  return second;
-}
-// to accept the operator, store the 1st operand and prepare for second operand
-function operatorInput(op) {
+function inputOperator(op) {
   const { firstOperand, value, operator } = calculator;
-  const input = parseFloat(calculator.value);
-  //   checking 1st operand and if it is okay, append it to obj
+  const input = parseFloat(value);
   if (firstOperand === null && !isNaN(input)) {
     calculator.firstOperand = input;
-    calculator.incomingSecondOperand = true;
+    pastCalculator.firstOperand = input;
+    outputDisplay.innerText = `${pastCalculator.firstOperand}`;
   } else if (operator) {
-    const result = twoOperandCalculation(firstOperand, operator, value);
-    calculator.value = result;
+    pastCalculator.operator = operator;
+    fullOutputDisplay();
+    const xsecondOperand = parseFloat(value);
+    pastCalculator.secondOperand = xsecondOperand;
+    fullOutputDisplay();
+    updatePastCalculator();
+    const result = calculationTwoOperands(
+      firstOperand,
+      xsecondOperand,
+      operator
+    );
+    calculator.value = String(result);
+    pastCalculator.firstOperand = calculator.value;
     calculator.firstOperand = result;
+    display();
   }
   calculator.incomingSecondOperand = true;
   calculator.operator = op;
+  pastCalculator.operator = calculator.operator;
+  pastCalculator.firstOperand = calculator.firstOperand;
+  pastCalculator.secondOperand = null;
+  fullOutputDisplay();
+
+  // fullOutputDisplay();
+  // updatePastCalculator();
   console.log(calculator);
-  defaultDisplay();
-  output();
+}
+function updatePastCalculator() {
+  calculator.firstOperand = pastCalculator.firstOperand;
+  calculator.operator = pastCalculator.operator;
+  calculator.value = pastCalculator.secondOperand;
+}
+function resetOutputValues() {
+  pastCalculator.firstOperand = calculator.value;
+  pastCalculator.operator = null;
+  pastCalculator.secondOperand = null;
+}
+function fullOutputDisplay() {
+  if (
+    pastCalculator.firstOperand &&
+    pastCalculator.operator === null &&
+    pastCalculator.secondOperand === null
+  ) {
+    outputDisplay.innerText = `${pastCalculator.firstOperand}`;
+  } else if (
+    pastCalculator.firstOperand &&
+    pastCalculator.operator &&
+    pastCalculator.secondOperand === null
+  ) {
+    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
+  } else {
+    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
+  }
+}
+function calculationTwoOperands(firstOperand, secondOperand, operator) {
+  parseFloat(secondOperand);
+  if (operator === "+") {
+    return firstOperand + secondOperand;
+  } else if (operator === "-") {
+    return firstOperand - secondOperand;
+  } else if (operator === "×") {
+    return firstOperand * secondOperand;
+  } else if (operator === "÷") {
+    return firstOperand / secondOperand;
+  }
+  return secondOperand;
 }
