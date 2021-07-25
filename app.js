@@ -98,10 +98,10 @@ function inputOperator(op) {
     outputLiveDisplay();
     calculator.firstOperand = result;
     pastCalculator.firstOperand = result;
+    pastCalculator.secondOperand = null;
     display();
   }
   calculator.incomingSecondOperand = true;
-  // TODO this works
   calculator.operator = op;
   if (op != "=") {
     pastCalculator.operator = op;
@@ -163,6 +163,7 @@ function reset() {
   calculator.operator = null;
   calculator.incomingSecondOperand = false;
 }
+// TODO reset secondoperand on consecutive calculations, as it shows the previous one
 function outputLiveDisplay() {
   // TODO could run on interval
   if (
