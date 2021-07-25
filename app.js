@@ -27,6 +27,7 @@ const pastCalculator = {
   operator: null,
   secondOperand: null,
 };
+window.addEventListener("load", outputLiveDisplay);
 
 allOperands.forEach((operand) =>
   operand.addEventListener("click", (e) => {
@@ -42,7 +43,6 @@ allOperands.forEach((operand) =>
 allOperators.forEach((operator) =>
   operator.addEventListener("click", (e) => {
     const operatorValue = e.target.innerText;
-    console.log(operatorValue);
     inputOperator(operatorValue);
   })
 );
@@ -67,65 +67,83 @@ function inputDecimal(dot) {
 function inputOperator(op) {
   const { firstOperand, value, operator } = calculator;
   const input = parseFloat(value);
+  if (operator && calculator.incomingSecondOperand) {
+    calculator.operator = op;
+    pastCalculator.operator = op;
+    outputLiveDisplay();
+    return;
+  }
   if (firstOperand === null && !isNaN(input)) {
     calculator.firstOperand = input;
     pastCalculator.firstOperand = input;
-    outputDisplay.innerText = `${pastCalculator.firstOperand}`;
+    outputLiveDisplay();
+    // pastCalculator.firstOperand = input;
+    // outputDisplay.innerText = `${pastCalculator.firstOperand}`;
   } else if (operator) {
-    pastCalculator.operator = operator;
-    fullOutputDisplay();
+    // pastCalculator.operator = operator;
+    // fullOutputDisplay();
+    pastCalculator.operator = calculator.operator;
     const xsecondOperand = parseFloat(value);
     pastCalculator.secondOperand = xsecondOperand;
-    fullOutputDisplay();
-    updatePastCalculator();
+    // pastCalculator.secondOperand = xsecondOperand;
+    // fullOutputDisplay();
+    // updatePastCalculator();
     const result = calculationTwoOperands(
       firstOperand,
       xsecondOperand,
       operator
     );
     calculator.value = String(result);
-    pastCalculator.firstOperand = calculator.value;
+    // pastCalculator.firstOperand = calculator.value;
+    outputLiveDisplay();
     calculator.firstOperand = result;
+    pastCalculator.firstOperand = result;
     display();
   }
   calculator.incomingSecondOperand = true;
+  // TODO this works
   calculator.operator = op;
-  pastCalculator.operator = calculator.operator;
-  pastCalculator.firstOperand = calculator.firstOperand;
-  pastCalculator.secondOperand = null;
-  fullOutputDisplay();
+  if (op != "=") {
+    pastCalculator.operator = op;
+  }
+  // outputLiveDisplay();
+  // pastCalculator.operator = calculator.operator;
+  // }
+  // pastCalculator.firstOperand = calculator.firstOperand;
+  // pastCalculator.secondOperand = null;
+  // fullOutputDisplay();
 
   // fullOutputDisplay();
   // updatePastCalculator();
   console.log(calculator);
 }
-function updatePastCalculator() {
-  calculator.firstOperand = pastCalculator.firstOperand;
-  calculator.operator = pastCalculator.operator;
-  calculator.value = pastCalculator.secondOperand;
-}
-function resetOutputValues() {
-  pastCalculator.firstOperand = calculator.value;
-  pastCalculator.operator = null;
-  pastCalculator.secondOperand = null;
-}
-function fullOutputDisplay() {
-  if (
-    pastCalculator.firstOperand &&
-    pastCalculator.operator === null &&
-    pastCalculator.secondOperand === null
-  ) {
-    outputDisplay.innerText = `${pastCalculator.firstOperand}`;
-  } else if (
-    pastCalculator.firstOperand &&
-    pastCalculator.operator &&
-    pastCalculator.secondOperand === null
-  ) {
-    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
-  } else {
-    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
-  }
-}
+// function updatePastCalculator() {
+//   calculator.firstOperand = pastCalculator.firstOperand;
+//   calculator.operator = pastCalculator.operator;
+//   calculator.value = pastCalculator.secondOperand;
+// }
+// function resetOutputValues() {
+//   pastCalculator.firstOperand = calculator.value;
+//   pastCalculator.operator = null;
+//   pastCalculator.secondOperand = null;
+// }
+// function fullOutputDisplay() {
+//   if (
+//     pastCalculator.firstOperand &&
+//     pastCalculator.operator === null &&
+//     pastCalculator.secondOperand === null
+//   ) {
+//     outputDisplay.innerText = `${pastCalculator.firstOperand}`;
+//   } else if (
+//     pastCalculator.firstOperand &&
+//     pastCalculator.operator &&
+//     pastCalculator.secondOperand === null
+//   ) {
+//     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
+//   } else {
+//     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
+//   }
+// }
 function calculationTwoOperands(firstOperand, secondOperand, operator) {
   parseFloat(secondOperand);
   if (operator === "+") {
@@ -138,4 +156,32 @@ function calculationTwoOperands(firstOperand, secondOperand, operator) {
     return firstOperand / secondOperand;
   }
   return secondOperand;
+}
+function reset() {
+  calculator.value = "0";
+  calculator.firstOperand = null;
+  calculator.operator = null;
+  calculator.incomingSecondOperand = false;
+}
+function outputLiveDisplay() {
+  // TODO could run on interval
+  if (
+    pastCalculator.firstOperand &&
+    pastCalculator.operator === null &&
+    pastCalculator.secondOperand === null
+  ) {
+    outputDisplay.innerText = `${pastCalculator.firstOperand}`;
+  } else if (
+    pastCalculator.firstOperand &&
+    pastCalculator.operator &&
+    pastCalculator.secondOperand === null
+  ) {
+    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
+  } else if (
+    pastCalculator.firstOperand &&
+    pastCalculator.operator &&
+    pastCalculator.secondOperand
+  ) {
+    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
+  }
 }
