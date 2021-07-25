@@ -43,7 +43,20 @@ allOperands.forEach((operand) =>
 allOperators.forEach((operator) =>
   operator.addEventListener("click", (e) => {
     const operatorValue = e.target.innerText;
-    inputOperator(operatorValue);
+    console.log(operatorValue);
+    switch (operatorValue) {
+      case "÷":
+      case "×":
+      case "-":
+      case "+":
+      case "%":
+      case "=":
+        inputOperatorTwoOperands(operatorValue);
+        break;
+      case "CE":
+        clearEntry();
+        break;
+    }
   })
 );
 
@@ -64,7 +77,27 @@ function inputDecimal(dot) {
     calculator.value += dot;
   }
 }
-function inputOperator(op) {
+function inputOperatorOneOperand(op) {
+  calculator.incomingSecondOperand = false;
+  const { firstOperand, value, operator } = calculator;
+  const input = parseFloat(value);
+  if (firstOperand === null && !isNaN(input)) {
+    calculator.firstOperand = input;
+    pastCalculator.firstOperand = input;
+    outputLiveDisplay();
+  } else {
+    calculator.operator = op;
+    pastCalculator.operator = op;
+    // const result =
+  }
+}
+function calculationOneOperand(firstOperand, operator) {
+  parseFloat(firstOperand);
+  switch (operator) {
+    case "":
+  }
+}
+function inputOperatorTwoOperands(op) {
   const { firstOperand, value, operator } = calculator;
   const input = parseFloat(value);
   if (operator && calculator.incomingSecondOperand) {
@@ -88,11 +121,12 @@ function inputOperator(op) {
     // pastCalculator.secondOperand = xsecondOperand;
     // fullOutputDisplay();
     // updatePastCalculator();
-    const result = calculationTwoOperands(
-      firstOperand,
-      xsecondOperand,
-      operator
-    );
+    const result =
+      Math.round(
+        (calculationTwoOperands(firstOperand, xsecondOperand, operator) +
+          Number.EPSILON) *
+          100
+      ) / 100;
     calculator.value = String(result);
     // pastCalculator.firstOperand = calculator.value;
     outputLiveDisplay();
@@ -144,19 +178,51 @@ function inputOperator(op) {
 //     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
 //   }
 // }
+// function calculationTwoOperands(firstOperand, secondOperand, operator) {
+//   parseFloat(secondOperand);
+//   if (operator === "+") {
+//     return firstOperand + secondOperand;
+//   } else if (operator === "-") {
+//     return firstOperand - secondOperand;
+//   } else if (operator === "×") {
+//     return firstOperand * secondOperand;
+//   } else if (operator === "÷") {
+//     return firstOperand / secondOperand;
+//   }
+//   return secondOperand;
+// }
 function calculationTwoOperands(firstOperand, secondOperand, operator) {
   parseFloat(secondOperand);
-  if (operator === "+") {
-    return firstOperand + secondOperand;
-  } else if (operator === "-") {
-    return firstOperand - secondOperand;
-  } else if (operator === "×") {
-    return firstOperand * secondOperand;
-  } else if (operator === "÷") {
-    return firstOperand / secondOperand;
+  switch (operator) {
+    case "+":
+      return firstOperand + secondOperand;
+      break;
+    case "-":
+      return firstOperand - secondOperand;
+      break;
+    case "×":
+      return firstOperand * secondOperand;
+      break;
+    case "÷":
+      return firstOperand / secondOperand;
+      break;
+    case "%":
+      return ((firstOperand / secondOperand) * 100) / 100;
   }
   return secondOperand;
 }
+function clearEntry() {
+  if (calculator.firstOperand && calculator.value) {
+    calculator.value = "";
+    pastCalculator.firstOperand = calculator.firstOperand;
+  } else if (calculator.firstOperand === null && calculator.value) {
+    calculator.value = "";
+    pastCalculator.firstOperand = "";
+  }
+  outputLiveDisplay();
+  display();
+}
+
 function reset() {
   calculator.value = "0";
   calculator.firstOperand = null;
@@ -184,5 +250,7 @@ function outputLiveDisplay() {
     pastCalculator.secondOperand
   ) {
     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
+  } else {
+    outputDisplay.innerText = "";
   }
 }
