@@ -2,6 +2,7 @@ const outputDisplay = document.querySelector(".output-value");
 const inputDisplay = document.querySelector("#input-value");
 // buttons
 const percentageButton = document.querySelector(".percentage-button");
+const plusMinusButton = document.querySelector(".buttonplusminus");
 const ceButton = document.querySelector(".ce-button");
 const cButton = document.querySelector(".c-button");
 const backspaceButton = document.querySelector(".backspace-button");
@@ -27,7 +28,7 @@ const pastCalculator = {
   operator: null,
   secondOperand: null,
 };
-window.addEventListener("load", outputLiveDisplay);
+window.addEventListener("load", clearC);
 
 allOperands.forEach((operand) =>
   operand.addEventListener("click", (e) => {
@@ -38,12 +39,13 @@ allOperands.forEach((operand) =>
       const decimal = e.target.innerText;
       inputDecimal(decimal);
     }
+    console.log(calculator);
+    console.log(pastCalculator);
   })
 );
 allOperators.forEach((operator) =>
   operator.addEventListener("click", (e) => {
     const operatorValue = e.target.innerText;
-    console.log(operatorValue);
     switch (operatorValue) {
       case "÷":
       case "×":
@@ -54,11 +56,36 @@ allOperators.forEach((operator) =>
         inputOperatorTwoOperands(operatorValue);
         break;
       case "CE":
-        clearEntry();
+        if (calculator.operator == "=") {
+          break;
+        } else {
+          clearEntryCE();
+          break;
+        }
+      case "C":
+        clearC();
         break;
     }
+    console.log(calculator);
+    console.log(pastCalculator);
   })
 );
+
+backspaceButton.addEventListener("click", () => {
+  if (calculator.operator == "=") {
+    return;
+  } else {
+    backspace();
+  }
+});
+plusMinusButton.addEventListener("click", () => {
+  if (calculator.operator == "=") {
+    return;
+  } else {
+    plusMinus();
+    outputLiveDisplay();
+  }
+});
 
 function display() {
   inputDisplay.value = calculator.value;
@@ -110,17 +137,10 @@ function inputOperatorTwoOperands(op) {
     calculator.firstOperand = input;
     pastCalculator.firstOperand = input;
     outputLiveDisplay();
-    // pastCalculator.firstOperand = input;
-    // outputDisplay.innerText = `${pastCalculator.firstOperand}`;
   } else if (operator) {
-    // pastCalculator.operator = operator;
-    // fullOutputDisplay();
     pastCalculator.operator = calculator.operator;
     const xsecondOperand = parseFloat(value);
     pastCalculator.secondOperand = xsecondOperand;
-    // pastCalculator.secondOperand = xsecondOperand;
-    // fullOutputDisplay();
-    // updatePastCalculator();
     const result =
       Math.round(
         (calculationTwoOperands(firstOperand, xsecondOperand, operator) +
@@ -128,69 +148,19 @@ function inputOperatorTwoOperands(op) {
           100
       ) / 100;
     calculator.value = String(result);
-    // pastCalculator.firstOperand = calculator.value;
     outputLiveDisplay();
     calculator.firstOperand = result;
     pastCalculator.firstOperand = result;
-    pastCalculator.secondOperand = null;
     display();
   }
+  pastCalculator.secondOperand = null;
   calculator.incomingSecondOperand = true;
   calculator.operator = op;
-  if (op != "=") {
+  if (op !== "=") {
     pastCalculator.operator = op;
   }
-  // outputLiveDisplay();
-  // pastCalculator.operator = calculator.operator;
-  // }
-  // pastCalculator.firstOperand = calculator.firstOperand;
-  // pastCalculator.secondOperand = null;
-  // fullOutputDisplay();
-
-  // fullOutputDisplay();
-  // updatePastCalculator();
   console.log(calculator);
 }
-// function updatePastCalculator() {
-//   calculator.firstOperand = pastCalculator.firstOperand;
-//   calculator.operator = pastCalculator.operator;
-//   calculator.value = pastCalculator.secondOperand;
-// }
-// function resetOutputValues() {
-//   pastCalculator.firstOperand = calculator.value;
-//   pastCalculator.operator = null;
-//   pastCalculator.secondOperand = null;
-// }
-// function fullOutputDisplay() {
-//   if (
-//     pastCalculator.firstOperand &&
-//     pastCalculator.operator === null &&
-//     pastCalculator.secondOperand === null
-//   ) {
-//     outputDisplay.innerText = `${pastCalculator.firstOperand}`;
-//   } else if (
-//     pastCalculator.firstOperand &&
-//     pastCalculator.operator &&
-//     pastCalculator.secondOperand === null
-//   ) {
-//     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
-//   } else {
-//     outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator} ${pastCalculator.secondOperand} =`;
-//   }
-// }
-// function calculationTwoOperands(firstOperand, secondOperand, operator) {
-//   parseFloat(secondOperand);
-//   if (operator === "+") {
-//     return firstOperand + secondOperand;
-//   } else if (operator === "-") {
-//     return firstOperand - secondOperand;
-//   } else if (operator === "×") {
-//     return firstOperand * secondOperand;
-//   } else if (operator === "÷") {
-//     return firstOperand / secondOperand;
-//   }
-//   return secondOperand;
-// }
 function calculationTwoOperands(firstOperand, secondOperand, operator) {
   parseFloat(secondOperand);
   switch (operator) {
@@ -211,7 +181,7 @@ function calculationTwoOperands(firstOperand, secondOperand, operator) {
   }
   return secondOperand;
 }
-function clearEntry() {
+function clearEntryCE() {
   if (calculator.firstOperand && calculator.value) {
     calculator.value = "";
     pastCalculator.firstOperand = calculator.firstOperand;
@@ -223,15 +193,27 @@ function clearEntry() {
   display();
 }
 
-function reset() {
-  calculator.value = "0";
-  calculator.firstOperand = null;
-  calculator.operator = null;
+function clearC() {
+  calculator.value = pastCalculator.secondOperand = "0";
+  calculator.firstOperand = pastCalculator.firstOperand = null;
+  calculator.operator = pastCalculator.operator = null;
   calculator.incomingSecondOperand = false;
+  inputDisplay.value = "";
+  outputLiveDisplay();
 }
-// TODO reset secondoperand on consecutive calculations, as it shows the previous one
+function backspace() {
+  const liveValue = calculator.value;
+  const editedValue = liveValue.slice(0, -1);
+  calculator.value = editedValue;
+  display();
+  outputLiveDisplay();
+}
+function plusMinus() {
+  calculator.value = parseFloat(calculator.value * -1);
+  display();
+}
+
 function outputLiveDisplay() {
-  // TODO could run on interval
   if (
     pastCalculator.firstOperand &&
     pastCalculator.operator === null &&
