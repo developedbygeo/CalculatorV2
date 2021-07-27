@@ -13,6 +13,7 @@ main {
 }
 .buttons {
   @include grid(repeat(4, 1fr), repeat(6, 1fr));
+  border-top: 0.15px solid $gunmetal;
   gap: 0.1rem;
   button {
     width: 100%;
@@ -170,4 +171,66 @@ main {
 .addition-button,
 .equal-button {
   font-size: 1.8rem;
+}
+.buttons button {
+  transition: all 100ms;
+}
+.buttons button:hover {
+  background: rgba($color: $davysgray, $alpha: 0.65);
+}
+
+.operand:focus {
+  animation: buttonAnimationOperand 150ms;
+}
+.operator:focus {
+  animation: buttonAnimationOperator 150ms;
+}
+.equal-button:focus {
+  animation: buttonAnimationEqual 150ms;
+}
+.key-equal button:hover {
+  background: #234af7;
+}
+
+@keyframes buttonAnimationOperand {
+  0% {
+    background: $charleston;
+    box-shadow: "";
+  }
+  50% {
+    background: rgba($color: $davysgray, $alpha: 0.85);
+    box-shadow: $box-shadow-keys;
+  }
+  100% {
+    background: $charleston;
+    box-shadow: "";
+  }
+}
+@keyframes buttonAnimationOperator {
+  0% {
+    background: $gunmetal;
+    box-shadow: "";
+  }
+  50% {
+    background: rgba($color: $gunmetal, $alpha: 0.85);
+    box-shadow: $box-shadow-keys;
+  }
+  100% {
+    background: $gunmetal;
+    box-shadow: "";
+  }
+}
+@keyframes buttonAnimationEqual {
+  0% {
+    background: $ultramarine;
+    box-shadow: "";
+  }
+  50% {
+    background: #4061f7;
+    box-shadow: $box-shadow-keys;
+  }
+  100% {
+    background: $ultramarine;
+    box-shadow: "";
+  }
 }
