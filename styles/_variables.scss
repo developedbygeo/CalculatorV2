@@ -3,6 +3,11 @@ $ultramarine: #4361ee;
 $davysgray: #495057;
 $gunmetal: #343a40;
 $charleston: #212529;
+$box-shadow-keys: 0 2px 5px rgba(0, 0, 0, 0.5),
+  0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 0 0 rgba(0, 0, 0, 0.25) inset,
+  0 20px 0 rgba(255, 255, 255, 0.03) inset,
+  0 -20px 20px rgba(0, 0, 0, 0.15) inset,
+  0 20px 20px rgba(255, 255, 255, 0.05) inset;
 
 @mixin flex($justify, $align, $dir) {
   display: grid;
