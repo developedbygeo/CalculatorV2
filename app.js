@@ -17,6 +17,8 @@ const equalButton = document.querySelector(".equal-button");
 const allOperands = document.querySelectorAll(".operand");
 const allOperators = document.querySelectorAll(".operator");
 
+// TODO fix double dot in operator.value
+
 const calculator = {
   value: "0",
   firstOperand: null,
@@ -46,6 +48,7 @@ allOperands.forEach((operand) =>
 allOperators.forEach((operator) =>
   operator.addEventListener("click", (e) => {
     const operatorValue = e.target.innerText;
+    console.log(operatorValue);
     switch (operatorValue) {
       case "÷":
       case "×":
@@ -65,6 +68,10 @@ allOperators.forEach((operator) =>
       case "C":
         clearC();
         break;
+      case "⅟ₓ":
+      case "x²":
+      case "²√ₓ":
+        inputOneOperatorOneOperand(operatorValue);
     }
     console.log(calculator);
     console.log(pastCalculator);
@@ -90,6 +97,7 @@ plusMinusButton.addEventListener("click", () => {
 function display() {
   inputDisplay.value = calculator.value;
 }
+// updates value or appends it to value str
 function inputValues(num) {
   const { incomingSecondOperand, value } = calculator;
   if (incomingSecondOperand === true) {
@@ -100,28 +108,54 @@ function inputValues(num) {
   }
 }
 function inputDecimal(dot) {
+  if (calculator.incomingSecondOperand === true) {
+    calculator.value = "0.";
+    calculator.incomingSecondOperand = false;
+    return;
+  }
   if (!calculator.value.includes(dot)) {
     calculator.value += dot;
   }
 }
-function inputOperatorOneOperand(op) {
+
+function inputOneOperatorOneOperand(op) {
   calculator.incomingSecondOperand = false;
   const { firstOperand, value, operator } = calculator;
   const input = parseFloat(value);
-  if (firstOperand === null && !isNaN(input)) {
-    calculator.firstOperand = input;
-    pastCalculator.firstOperand = input;
-    outputLiveDisplay();
+  calculator.firstOperand = value;
+  pastCalculator.firstOperand = value;
+  pastCalculator.secondOperand = null;
+  calculator.operator = pastCalculator.operator = op;
+  const result =
+    Math.round(
+      (calculationOneOperand(calculator.firstOperand, calculator.operator) +
+        Number.EPSILON) *
+        100000000000000
+    ) / 100000000000000;
+  if (result == Infinity) {
+    calculator.value = "0";
+    pastCalculator.firstOperand = null;
+    outputDisplay.innerText = "Error";
   } else {
-    calculator.operator = op;
-    pastCalculator.operator = op;
-    // const result =
+    calculator.value = String(result);
+    display();
+    outputLiveDisplay();
+    calculator.firstOperand = null;
+    calculator.value = result;
+    pastCalculator.firstOperand = result;
+    calculator.operator = null;
   }
+  // pastCalculator.operator = null;
 }
 function calculationOneOperand(firstOperand, operator) {
   parseFloat(firstOperand);
   switch (operator) {
-    case "":
+    case "⅟ₓ":
+      return parseFloat(1 / firstOperand);
+    case "x²":
+      return parseFloat(Math.pow(firstOperand, 2));
+    case "²√ₓ":
+      return parseFloat(Math.sqrt(firstOperand));
   }
 }
 function inputOperatorTwoOperands(op) {
@@ -138,6 +172,7 @@ function inputOperatorTwoOperands(op) {
     pastCalculator.firstOperand = input;
     outputLiveDisplay();
   } else if (operator) {
+    // if operator exists, copies it to the backup obj and calculates result, rounded to 2 decimals
     pastCalculator.operator = calculator.operator;
     const xsecondOperand = parseFloat(value);
     pastCalculator.secondOperand = xsecondOperand;
@@ -156,6 +191,7 @@ function inputOperatorTwoOperands(op) {
   pastCalculator.secondOperand = null;
   calculator.incomingSecondOperand = true;
   calculator.operator = op;
+  // used to bypass operator change on equal
   if (op !== "=") {
     pastCalculator.operator = op;
   }
@@ -182,6 +218,7 @@ function calculationTwoOperands(firstOperand, secondOperand, operator) {
   return secondOperand;
 }
 function clearEntryCE() {
+  // clears current entry
   if (calculator.firstOperand && calculator.value) {
     calculator.value = "";
     pastCalculator.firstOperand = calculator.firstOperand;
@@ -194,6 +231,7 @@ function clearEntryCE() {
 }
 
 function clearC() {
+  // clears all entries
   calculator.value = pastCalculator.secondOperand = "0";
   calculator.firstOperand = pastCalculator.firstOperand = null;
   calculator.operator = pastCalculator.operator = null;
@@ -209,6 +247,7 @@ function backspace() {
   outputLiveDisplay();
 }
 function plusMinus() {
+  // multiplies by -1 to toggle plus or minus sign before .value
   calculator.value = parseFloat(calculator.value * -1);
   display();
 }
@@ -225,7 +264,15 @@ function outputLiveDisplay() {
     pastCalculator.operator &&
     pastCalculator.secondOperand === null
   ) {
-    outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
+    if (pastCalculator.operator == "⅟ₓ") {
+      outputDisplay.innerText = `1/(${pastCalculator.firstOperand})`;
+    } else if (pastCalculator.operator == "x²") {
+      outputDisplay.innerText = `sqr(${pastCalculator.firstOperand})`;
+    } else if (pastCalculator.operator == "²√ₓ") {
+      outputDisplay.innerText = `√(${pastCalculator.firstOperand})`;
+    } else {
+      outputDisplay.innerText = `${pastCalculator.firstOperand} ${pastCalculator.operator}`;
+    }
   } else if (
     pastCalculator.firstOperand &&
     pastCalculator.operator &&
