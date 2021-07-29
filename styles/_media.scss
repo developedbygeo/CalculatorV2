@@ -1,0 +1,29 @@
+@media screen and (max-width: 300px) {
+  html {
+    font-size: 37.5%;
+  }
+  .buttons {
+    gap: 0.16rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  main {
+    background: rgb(73, 80, 87);
+    background: linear-gradient(
+      180deg,
+      rgb(73, 80, 87) 0%,
+      rgb(52, 58, 64) 45%,
+      rgb(33, 37, 41) 100%
+    );
+  }
+  .calculator {
+    width: 80vw;
+    height: 85vh;
+  }
+}
+@media screen and (min-width: 1088px) {
+  .calculator {
+    width: 40vw;
+    height: 90vh;
+  }
+}
