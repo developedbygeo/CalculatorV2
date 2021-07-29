@@ -117,17 +117,6 @@ main {
 .fa-backspace {
   font-size: 1.3rem;
 }
-.plus,
-.minus,
-.x,
-.sqr,
-.span-1,
-.span-x,
-.span-o1,
-.span-o2 {
-  position: absolute;
-  pointer-events: none;
-}
 .sqr-button {
   position: relative;
   .sqr {
@@ -136,9 +125,7 @@ main {
     left: 56%;
   }
 }
-.x {
-  font-size: 1.2rem;
-}
+
 .key-divide-by-x {
   position: relative;
   .span-1 {
@@ -155,12 +142,9 @@ main {
 .buttonplusminus {
   position: relative;
 }
-.plus {
-  top: 26%;
-  left: 35%;
-}
-.minus {
-  bottom: 26%;
+.buttonplusminus,
+.buttonpoint {
+  font-size: 2rem;
 }
 .percentage-button {
   position: relative;
