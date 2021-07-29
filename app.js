@@ -1,62 +1,59 @@
+// displays
 const outputDisplay = document.querySelector(".output-value");
 const inputDisplay = document.querySelector("#input-value");
 // buttons
-const percentageButton = document.querySelector(".percentage-button");
 const plusMinusButton = document.querySelector(".buttonplusminus");
-const ceButton = document.querySelector(".ce-button");
-const cButton = document.querySelector(".c-button");
 const backspaceButton = document.querySelector(".backspace-button");
-const divideByXButton = document.querySelector(".divide-by-x-button");
-const squareButton = document.querySelector(".sqr-button");
-const squareRootButton = document.querySelector(".sqr-root-button");
-const divisionButton = document.querySelector(".division-button");
-const multiplicationButton = document.querySelector(".multiplication-button");
-const subtractionButton = document.querySelector(".subtraction-button");
-const additionButton = document.querySelector(".addition-button");
 const equalButton = document.querySelector(".equal-button");
+const dotButton = document.querySelector(".buttonpoint");
 const allOperands = document.querySelectorAll(".operand");
 const allOperators = document.querySelectorAll(".operator");
 
-// TODO fix double dot in operator.value
-
+// calculator stores the current values and calculations take place based on its properties
 const calculator = {
   value: "0",
   firstOperand: null,
   incomingSecondOperand: false,
   operator: null,
+  incomingDecimal: true,
 };
+// the past calculator is mainly there for the outputDisplay and outputLiveDisplay
 const pastCalculator = {
   firstOperand: null,
   operator: null,
   secondOperand: null,
 };
+
+// Event Listeners
+
 window.addEventListener("load", clearC);
 
 allOperands.forEach((operand) =>
   operand.addEventListener("click", (e) => {
+    toggleDecimal();
     operandValue = e.target.innerText;
     inputValues(operandValue);
     display();
     if (operand.classList.contains("buttonpoint")) {
       const decimal = e.target.innerText;
       inputDecimal(decimal);
+      checkDecimalExists();
     }
-    console.log(calculator);
-    console.log(pastCalculator);
   })
 );
 allOperators.forEach((operator) =>
   operator.addEventListener("click", (e) => {
     const operatorValue = e.target.innerText;
-    console.log(operatorValue);
     switch (operatorValue) {
       case "÷":
       case "×":
       case "-":
       case "+":
-      case "%":
+      case "％":
       case "=":
         inputOperatorTwoOperands(operatorValue);
+        checkDecimalExists();
+        calculator.incomingDecimal = true;
         break;
       case "CE":
         if (calculator.operator == "=") {
@@ -73,8 +70,6 @@ allOperators.forEach((operator) =>
       case "²√ₓ":
         inputOneOperatorOneOperand(operatorValue);
     }
-    console.log(calculator);
-    console.log(pastCalculator);
   })
 );
 
@@ -83,6 +78,7 @@ backspaceButton.addEventListener("click", () => {
     return;
   } else {
     backspace();
+    checkDecimalExists();
   }
 });
 plusMinusButton.addEventListener("click", () => {
@@ -91,12 +87,12 @@ plusMinusButton.addEventListener("click", () => {
   } else {
     plusMinus();
     outputLiveDisplay();
+    checkDecimalExists();
   }
 });
 
-function display() {
-  inputDisplay.value = calculator.value;
-}
+// INPUT Functions
+
 // updates value or appends it to value str
 function inputValues(num) {
   const { incomingSecondOperand, value } = calculator;
@@ -107,17 +103,24 @@ function inputValues(num) {
     calculator.value = value === "0" ? num : value + num;
   }
 }
+// checks whether a decimal exists and sets the incomingDecimal value accordingly
 function inputDecimal(dot) {
-  if (calculator.incomingSecondOperand === true) {
+  if (calculator.incomingSecondOperand == true) {
     calculator.value = "0.";
     calculator.incomingSecondOperand = false;
+    calculator.incomingDecimal = false;
     return;
   }
   if (!calculator.value.includes(dot)) {
+    calculator.incomingDecimal = true;
     calculator.value += dot;
+  } else if (calculator.firstOperand && !calculator.value.includes(dot)) {
+    calculator.incomingDecimal = true;
   }
+  toggleDecimal();
 }
-
+// handles the operator input for one-operand operations and allows for up to 8 decimal places
+// if result is infinity it errors out
 function inputOneOperatorOneOperand(op) {
   calculator.incomingSecondOperand = false;
   const { firstOperand, value, operator } = calculator;
@@ -130,8 +133,8 @@ function inputOneOperatorOneOperand(op) {
     Math.round(
       (calculationOneOperand(calculator.firstOperand, calculator.operator) +
         Number.EPSILON) *
-        100000000000000
-    ) / 100000000000000;
+        10000
+    ) / 10000;
   if (result == Infinity) {
     calculator.value = "0";
     pastCalculator.firstOperand = null;
@@ -145,19 +148,8 @@ function inputOneOperatorOneOperand(op) {
     pastCalculator.firstOperand = result;
     calculator.operator = null;
   }
-  // pastCalculator.operator = null;
 }
-function calculationOneOperand(firstOperand, operator) {
-  parseFloat(firstOperand);
-  switch (operator) {
-    case "⅟ₓ":
-      return parseFloat(1 / firstOperand);
-    case "x²":
-      return parseFloat(Math.pow(firstOperand, 2));
-    case "²√ₓ":
-      return parseFloat(Math.sqrt(firstOperand));
-  }
-}
+// handles operator input for two-operand operations
 function inputOperatorTwoOperands(op) {
   const { firstOperand, value, operator } = calculator;
   const input = parseFloat(value);
@@ -172,21 +164,30 @@ function inputOperatorTwoOperands(op) {
     pastCalculator.firstOperand = input;
     outputLiveDisplay();
   } else if (operator) {
-    // if operator exists, copies it to the backup obj and calculates result, rounded to 2 decimals
-    pastCalculator.operator = calculator.operator;
-    const xsecondOperand = parseFloat(value);
-    pastCalculator.secondOperand = xsecondOperand;
-    const result =
-      Math.round(
-        (calculationTwoOperands(firstOperand, xsecondOperand, operator) +
-          Number.EPSILON) *
-          100
-      ) / 100;
-    calculator.value = String(result);
-    outputLiveDisplay();
-    calculator.firstOperand = result;
-    pastCalculator.firstOperand = result;
-    display();
+    // this does not allow for the equal operator to be used without a previous proper operator in place.
+    if (operator == "=" && pastCalculator.secondOperand == null) {
+      pastCalculator.operator = "";
+      outputDisplay.innerText = "Error";
+      calculator.firstOperand = null;
+      calculator.value = "";
+      inputDisplay.value = "";
+    } else {
+      // if operator exists, copies it to the backup obj and calculates result, rounded to 4 decimals
+      pastCalculator.operator = calculator.operator;
+      const xsecondOperand = parseFloat(value);
+      pastCalculator.secondOperand = xsecondOperand;
+      const result =
+        Math.round(
+          (calculationTwoOperands(firstOperand, xsecondOperand, operator) +
+            Number.EPSILON) *
+            10000
+        ) / 10000;
+      calculator.value = String(result);
+      outputLiveDisplay();
+      calculator.firstOperand = result;
+      pastCalculator.firstOperand = result;
+      display();
+    }
   }
   pastCalculator.secondOperand = null;
   calculator.incomingSecondOperand = true;
@@ -195,7 +196,20 @@ function inputOperatorTwoOperands(op) {
   if (op !== "=") {
     pastCalculator.operator = op;
   }
-  console.log(calculator);
+}
+
+// CALCULATION Functions
+
+function calculationOneOperand(firstOperand, operator) {
+  parseFloat(firstOperand);
+  switch (operator) {
+    case "⅟ₓ":
+      return parseFloat(1 / firstOperand);
+    case "x²":
+      return parseFloat(Math.pow(firstOperand, 2));
+    case "²√ₓ":
+      return parseFloat(Math.sqrt(firstOperand));
+  }
 }
 function calculationTwoOperands(firstOperand, secondOperand, operator) {
   parseFloat(secondOperand);
@@ -212,46 +226,18 @@ function calculationTwoOperands(firstOperand, secondOperand, operator) {
     case "÷":
       return firstOperand / secondOperand;
       break;
-    case "%":
+    case "％":
       return ((firstOperand / secondOperand) * 100) / 100;
   }
   return secondOperand;
 }
-function clearEntryCE() {
-  // clears current entry
-  if (calculator.firstOperand && calculator.value) {
-    calculator.value = "";
-    pastCalculator.firstOperand = calculator.firstOperand;
-  } else if (calculator.firstOperand === null && calculator.value) {
-    calculator.value = "";
-    pastCalculator.firstOperand = "";
-  }
-  outputLiveDisplay();
-  display();
-}
 
-function clearC() {
-  // clears all entries
-  calculator.value = pastCalculator.secondOperand = "0";
-  calculator.firstOperand = pastCalculator.firstOperand = null;
-  calculator.operator = pastCalculator.operator = null;
-  calculator.incomingSecondOperand = false;
-  inputDisplay.value = "";
-  outputLiveDisplay();
-}
-function backspace() {
-  const liveValue = calculator.value;
-  const editedValue = liveValue.slice(0, -1);
-  calculator.value = editedValue;
-  display();
-  outputLiveDisplay();
-}
-function plusMinus() {
-  // multiplies by -1 to toggle plus or minus sign before .value
-  calculator.value = parseFloat(calculator.value * -1);
-  display();
-}
+// DISPLAY Functions
 
+function display() {
+  inputDisplay.value = calculator.value;
+}
+// handles the outputDisplay and differentiates between one-operand and two-operand operations
 function outputLiveDisplay() {
   if (
     pastCalculator.firstOperand &&
@@ -282,4 +268,61 @@ function outputLiveDisplay() {
   } else {
     outputDisplay.innerText = "";
   }
+}
+
+// ADDITIONAL Functions
+
+// checks if decimal exists and toggles the incomingDecicmal value accordingly
+function checkDecimalExists() {
+  const decimal = ".";
+  const strValue = String(calculator.value);
+  if (strValue.indexOf(decimal) < 0) {
+    calculator.incomingDecimal = true;
+  } else {
+    calculator.incomingDecimal = false;
+  }
+  toggleDecimal();
+}
+// disables or enables decimal button based on the key value
+function toggleDecimal() {
+  if (calculator.incomingDecimal == true) {
+    dotButton.disabled = false;
+  } else {
+    dotButton.disabled = true;
+  }
+}
+// clears current entry
+function clearEntryCE() {
+  if (calculator.firstOperand && calculator.value) {
+    calculator.value = "";
+    pastCalculator.firstOperand = calculator.firstOperand;
+  } else if (calculator.firstOperand === null && calculator.value) {
+    calculator.value = "";
+    pastCalculator.firstOperand = "";
+  }
+  outputLiveDisplay();
+  display();
+}
+
+// clears all entries
+function clearC() {
+  calculator.value = pastCalculator.secondOperand = "0";
+  calculator.firstOperand = pastCalculator.firstOperand = null;
+  calculator.operator = pastCalculator.operator = null;
+  calculator.incomingSecondOperand = false;
+  inputDisplay.value = "";
+  outputLiveDisplay();
+}
+// clears the calculator.value's last digit
+function backspace() {
+  const liveValue = calculator.value;
+  const editedValue = liveValue.slice(0, -1);
+  calculator.value = editedValue;
+  display();
+  outputLiveDisplay();
+}
+// multiplies by -1 to toggle plus or minus sign before .value
+function plusMinus() {
+  calculator.value = parseFloat(calculator.value * -1);
+  display();
 }
