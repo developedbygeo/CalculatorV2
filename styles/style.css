@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Lato", sans-serif;
 }
 
 html {
@@ -179,18 +180,6 @@ main {
   font-size: 1.3rem;
 }
 
-.plus,
-.minus,
-.x,
-.sqr,
-.span-1,
-.span-x,
-.span-o1,
-.span-o2 {
-  position: absolute;
-  pointer-events: none;
-}
-
 .sqr-button {
   position: relative;
 }
@@ -199,10 +188,6 @@ main {
   font-size: 1rem;
   top: 30%;
   left: 56%;
-}
-
-.x {
-  font-size: 1.2rem;
 }
 
 .key-divide-by-x {
@@ -225,13 +210,9 @@ main {
   position: relative;
 }
 
-.plus {
-  top: 26%;
-  left: 35%;
-}
-
-.minus {
-  bottom: 26%;
+.buttonplusminus,
+.buttonpoint {
+  font-size: 2rem;
 }
 
 .percentage-button {
@@ -312,6 +293,33 @@ main {
   100% {
     background: #4361ee;
     box-shadow: "";
+  }
+}
+
+@media screen and (max-width: 300px) {
+  html {
+    font-size: 37.5%;
+  }
+  .buttons {
+    gap: 0.16rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  main {
+    background: #495057;
+    background: linear-gradient(180deg, #495057 0%, #343a40 45%, #212529 100%);
+  }
+  .calculator {
+    width: 80vw;
+    height: 85vh;
+  }
+}
+
+@media screen and (min-width: 1088px) {
+  .calculator {
+    width: 40vw;
+    height: 90vh;
   }
 }
 /*# sourceMappingURL=style.css.map */
