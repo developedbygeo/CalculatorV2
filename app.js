@@ -2,12 +2,18 @@
 const outputDisplay = document.querySelector(".output-value");
 const inputDisplay = document.querySelector("#input-value");
 // buttons
+const additionButton = document.querySelector(".addition-button");
+const subtractionButton = document.querySelector(".subtraction-button");
+const multiplicationButton = document.querySelector(".multiplication-button");
+const divisionButton = document.querySelector(".division-button");
 const plusMinusButton = document.querySelector(".buttonplusminus");
 const backspaceButton = document.querySelector(".backspace-button");
 const equalButton = document.querySelector(".equal-button");
 const dotButton = document.querySelector(".buttonpoint");
 const allOperands = document.querySelectorAll(".operand");
 const allOperators = document.querySelectorAll(".operator");
+
+// TODO Fix bug with square root and then two-op calculation
 
 // calculator stores the current values and calculations take place based on its properties
 const calculator = {
@@ -28,10 +34,45 @@ const pastCalculator = {
 
 window.addEventListener("load", clearC);
 
+document.addEventListener("keypress", (e) => {
+  const pressedKey = e.key;
+  const operandsRegex = new RegExp(/[0-9]/);
+  const operatorsRegex = new RegExp(/[+\-\*\.\/]/);
+  if (operandsRegex.test(pressedKey) == true) {
+    allOperands.forEach((operand) => {
+      if (operand.innerText == pressedKey) {
+        operand.click();
+      }
+    });
+  } else if (operatorsRegex.test(pressedKey) == true) {
+    switch (pressedKey) {
+      case ".":
+        dotButton.click();
+        break;
+      case "+":
+        additionButton.click();
+        break;
+      case "-":
+        subtractionButton.click();
+        break;
+      case "*":
+        multiplicationButton.click();
+        break;
+      case "/":
+        divisionButton.click();
+        break;
+    }
+  } else if (pressedKey == "Enter") {
+    equalButton.click();
+  } else if (pressedKey == "Delete") {
+    backspaceButton.click();
+  }
+});
+
 allOperands.forEach((operand) =>
   operand.addEventListener("click", (e) => {
     toggleDecimal();
-    operandValue = e.target.innerText;
+    const operandValue = e.target.innerText;
     inputValues(operandValue);
     display();
     if (operand.classList.contains("buttonpoint")) {
@@ -39,6 +80,7 @@ allOperands.forEach((operand) =>
       inputDecimal(decimal);
       checkDecimalExists();
     }
+    outputLiveDisplay();
   })
 );
 allOperators.forEach((operator) =>
@@ -107,6 +149,7 @@ function inputValues(num) {
 function inputDecimal(dot) {
   if (calculator.incomingSecondOperand == true) {
     calculator.value = "0.";
+    display();
     calculator.incomingSecondOperand = false;
     calculator.incomingDecimal = false;
     return;
@@ -119,7 +162,7 @@ function inputDecimal(dot) {
   }
   toggleDecimal();
 }
-// handles the operator input for one-operand operations and allows for up to 8 decimal places
+// handles the operator input for one-operand operations and allows for up to 4 decimal places
 // if result is infinity it errors out
 function inputOneOperatorOneOperand(op) {
   calculator.incomingSecondOperand = false;
@@ -147,6 +190,7 @@ function inputOneOperatorOneOperand(op) {
     calculator.value = result;
     pastCalculator.firstOperand = result;
     calculator.operator = null;
+    pastCalculator.operator = null;
   }
 }
 // handles operator input for two-operand operations
@@ -172,7 +216,7 @@ function inputOperatorTwoOperands(op) {
       calculator.value = "";
       inputDisplay.value = "";
     } else {
-      // if operator exists, copies it to the backup obj and calculates result, rounded to 4 decimals
+      // if operator exists, copies it to the backup obj and calculates result, rounded to 2 decimals
       pastCalculator.operator = calculator.operator;
       const xsecondOperand = parseFloat(value);
       pastCalculator.secondOperand = xsecondOperand;
