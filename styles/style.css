@@ -306,10 +306,6 @@ main {
 }
 
 @media screen and (min-width: 768px) {
-  main {
-    background: #495057;
-    background: linear-gradient(180deg, #495057 0%, #343a40 45%, #212529 100%);
-  }
   .calculator {
     width: 80vw;
     height: 85vh;
@@ -320,9 +316,22 @@ main {
 }
 
 @media screen and (min-width: 1088px) {
+  main {
+    background: linear-gradient(rgba(17, 17, 17, 0.15), rgba(45, 45, 46, 0.15)), url("../img/table-background.jpg"), no-repeat;
+    background-size: cover;
+    background-position: left;
+  }
   .calculator {
-    width: 40vw;
-    height: 90vh;
+    width: 30vw;
+    height: 80vh;
+    border-radius: 1rem;
+    box-shadow: 8px 5px 6px 2px rgba(0, 0, 0, 0.35), 12px 13px 27px 10px rgba(0, 0, 0, 0.25), 3px 23px 14px -3px rgba(0, 0, 0, 0.45);
+  }
+  .equal-button {
+    border-bottom-right-radius: 1rem;
+  }
+  .buttonplusminus {
+    border-bottom-left-radius: 1rem;
   }
 }
 /*# sourceMappingURL=style.css.map */
