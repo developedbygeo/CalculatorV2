@@ -227,10 +227,16 @@ function inputOperatorTwoOperands(op) {
             10000
         ) / 10000;
       calculator.value = String(result);
-      outputLiveDisplay();
-      calculator.firstOperand = result;
-      pastCalculator.firstOperand = result;
-      display();
+      // countering dividing by zero
+      if (calculator.value == "NaN") {
+        clearC();
+        outputDisplay.innerText = "Error";
+      } else {
+        outputLiveDisplay();
+        calculator.firstOperand = result;
+        pastCalculator.firstOperand = result;
+        display();
+      }
     }
   }
   pastCalculator.secondOperand = null;
